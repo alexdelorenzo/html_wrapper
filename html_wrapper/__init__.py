@@ -1,1 +1,1 @@
-from html_wrapper.wrapper import *
+from .wrapper import HtmlWrapper, get_xpath, get_xpath_str
