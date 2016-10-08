@@ -9,5 +9,5 @@ setup(name="html_wrapper",
       packages=['html_wrapper'],
       zip_safe=True,
       install_requires=["lxml"],
-      keywords = "html parser wrapper beautifulsoup bs4 lxml xml html fast xpath".split(),
+      keywords="html parser wrapper beautifulsoup bs4 lxml xml html fast xpath".split(),
       )
