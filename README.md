@@ -1,6 +1,6 @@
 # html_wrapper
 
-html_wrapper implements a small subset of the BeautifulSoup API that I use. It's anywhere from 10x-100x faster in some cases.
+html_wrapper implements a small subset of the BeautifulSoup API that I use. It's anywhere from 10x-100x.
 
 
 ## Installation
@@ -8,7 +8,7 @@ html_wrapper implements a small subset of the BeautifulSoup API that I use. It's
 
 
 ## Example
-It's pretty fast to instantiate and to parse HTML for my needs.
+A bit faster to instantiate and parse HTML. Suits my needs.
 
 ```
 In [1]: import bs4
