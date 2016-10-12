@@ -12,6 +12,8 @@ class HtmlWrapper(object):
     An lxml adapter over a subset of the BeautifulSoup API
     """
 
+    __slots__ = ['html']
+
     def __init__(self, html):
         if isinstance(html, (str, bytes)):
             self.html = fromstring(html)
@@ -60,14 +62,14 @@ class HtmlWrapper(object):
         else:
             return val
 
-    def name(self):
-        return self.html.tag
-
     @property
     def text(self) -> str:
         text = self.html.text_content()
 
         return text if text else ''
+
+    def name(self) -> str:
+        return self.html.tag
 
     def find(self, tag: str, _class: str = None, **kwargs):
         return find(self.html, tag, _class, **kwargs)
