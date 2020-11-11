@@ -46,10 +46,10 @@ class BeautifulSoupMethods(ABC):
     def name(self) -> str:
         pass
 
-    def find(self, tag: str, attrs: Attrs = NO_ATTRS, *, _class: str = None, **kwargs) -> Optional['HtmlWrapper']:
+    def find(self, tag: str, attrs: Attrs = NO_ATTRS, *, class_: str = None, **kwargs) -> Optional['HtmlWrapper']:
         pass
 
-    def find_all(self, tag: str, attrs: Attrs = NO_ATTRS, *, _class: str = None, gen=False, **kwargs) -> 'Wrappers':
+    def find_all(self, tag: str, attrs: Attrs = NO_ATTRS, *, class_: str = None, gen=False, **kwargs) -> 'Wrappers':
         pass
 
 
@@ -125,21 +125,21 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        _class: str = None,
+        class_: str = None,
         **kwargs
     ) -> Optional['HtmlWrapper']:
-        return find(self.html, tag, attrs, _class=_class, **kwargs)
+        return find(self.html, tag, attrs, class_=class_, **kwargs)
 
     def find_all(
         self,
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        _class: str = None,
+        class_: str = None,
         gen=False,
         **kwargs
     ) -> 'Wrappers':
-        return find_all(self.html, tag, attrs, _class=_class, gen=gen, **kwargs)
+        return find_all(self.html, tag, attrs, class_=class_, gen=gen, **kwargs)
 
 
 Wrappers = Union[Tuple[HtmlWrapper, ...], Iterable[HtmlWrapper]]
@@ -149,17 +149,17 @@ def find(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    _class: str = None,
+    class_: str = None,
     **kwargs
 ) -> Optional[HtmlWrapper]:
     if isinstance(attrs, str):
-        _class = attrs
+        class_ = attrs
         attrs = NO_ATTRS
 
     elif isinstance(attrs, dict):
         kwargs.update(attrs)
 
-    results = find_all(html, tag, attrs, _class, gen=True, **kwargs)
+    results = find_all(html, tag, attrs, class_, gen=True, **kwargs)
 
     return next(results) if results else None
 
@@ -168,18 +168,18 @@ def find_all(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    _class: str = None,
+    class_: str = None,
     gen: bool = False,
     **kwargs
 ) -> Wrappers:
     if isinstance(attrs, str):
-        _class = attrs
+        class_ = attrs
         attrs = NO_ATTRS
 
     elif isinstance(attrs, dict):
         kwargs.update(attrs)
 
-    xpath = get_xpath(tag, _class, **kwargs)
+    xpath = get_xpath(tag, class_, **kwargs)
     elems = xpath(html)
 
     if not elems:
@@ -190,11 +190,11 @@ def find_all(
     return wrapper_map if gen else tuple(wrapper_map)
 
 
-def get_xpath_str(tag: str, _class: str = None, **kwargs) -> str:
+def get_xpath_str(tag: str, class_: str = None, **kwargs) -> str:
     tag_xp = f'.//{tag}'
 
-    if _class:
-        kwargs['class'] = _class
+    if class_:
+        kwargs['class'] = class_
 
     for attr, val in kwargs.items():
         tag_xp += '['
@@ -226,7 +226,7 @@ def get_xpath_str(tag: str, _class: str = None, **kwargs) -> str:
 
 
 @lru_cache(maxsize=None)
-def get_xpath(tag: str, _class: str = None, **kwargs) -> XPath:
-    xpath_str = get_xpath_str(tag, _class, **kwargs)
+def get_xpath(tag: str, class_: str = None, **kwargs) -> XPath:
+    xpath_str = get_xpath_str(tag, class_, **kwargs)
 
     return XPath(xpath_str)
