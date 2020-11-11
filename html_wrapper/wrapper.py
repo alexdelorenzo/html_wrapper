@@ -113,6 +113,7 @@ class HtmlWrapper(BeautifulSoupMethods):
         return text if text else NO_TEXT
 
     @property
+    @lru_cache
     def string(self) -> str:
         return tostring(self.html)
 
@@ -202,7 +203,7 @@ def get_xpath_str(tag: str, _class: str = None, **kwargs) -> str:
             tag_xp += f'contains({attr_xp}, "{val}")'
 
         else:
-            tag_xp += "{attr_xp}={val}'"
+            tag_xp += "{attr_xp}='{val}'"
 
         tag_xp += ']'
 
