@@ -2,8 +2,8 @@ from setuptools import setup
 
 
 setup(name="html_wrapper",
-      version="0.2.0",
-      description="Html Parser with lxml backend. Implements subset of BeautifulSoup API",
+      version="0.2.1",
+      description="HTML parser with an lxml backend. Implements a subset of BeautifulSoup API and is an order of magnitude faster",
       url="https://github.com/thismachinechills/html_wrapper",
       author="thismachinechills (Alex)",
       license="AGPL 3.0",
