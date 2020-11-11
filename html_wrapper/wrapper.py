@@ -84,8 +84,9 @@ class HtmlWrapper(BeautifulSoupMethods):
     def __repr__(self):
         return f'HtmlWrapper: {repr(self.html)}'
 
-    def __str__(self):
-        return self.html.text
+    def __str__(self) -> str:
+        string = tostring(self.html, encoding=STR_ENCODING)
+        return string.strip()
 
     def __getitem__(self, item):
         items = self.html.attrib[item]
@@ -116,8 +117,8 @@ class HtmlWrapper(BeautifulSoupMethods):
 
     @property
     @lru_cache
-    def string(self) -> str:
-        return tostring(self.html, encoding=STR_ENCODING)
+    def string(self):
+        return self.html.text.strip()
 
     def name(self) -> str:
         return self.html.tag
