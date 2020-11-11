@@ -120,10 +120,25 @@ class HtmlWrapper(BeautifulSoupMethods):
     def name(self) -> str:
         return self.html.tag
 
-    def find(self, tag: str, attrs: Attrs = NO_ATTRS, *, _class: str = None, **kwargs) -> Optional['HtmlWrapper']:
+    def find(
+        self,
+        tag: str,
+        attrs: Attrs = NO_ATTRS,
+        *,
+        _class: str = None,
+        **kwargs
+    ) -> Optional['HtmlWrapper']:
         return find(self.html, tag, attrs, _class=_class, **kwargs)
 
-    def find_all(self, tag: str, attrs: Attrs = NO_ATTRS, *, _class: str = None, gen=False, **kwargs) -> 'Wrappers':
+    def find_all(
+        self,
+        tag: str,
+        attrs: Attrs = NO_ATTRS,
+        *,
+        _class: str = None,
+        gen=False,
+        **kwargs
+    ) -> 'Wrappers':
         return find_all(self.html, tag, attrs, _class=_class, gen=gen, **kwargs)
 
 
