@@ -8,9 +8,11 @@ from lxml.etree import XPath
 
 
 BS4_TYPES = "Tag", "BeautifulSoup"
+STR_ENCODING = 'unicode'
+
 NO_ATTRS: Dict[str, str] = {}
 NO_TEXT = ''
-
+SKIP_COMMA: int = -len(', ')
 
 Attrs = Union[str, Dict]
 
@@ -115,7 +117,7 @@ class HtmlWrapper(BeautifulSoupMethods):
     @property
     @lru_cache
     def string(self) -> str:
-        return tostring(self.html)
+        return tostring(self.html, encoding=STR_ENCODING)
 
     def name(self) -> str:
         return self.html.tag
@@ -211,7 +213,7 @@ def get_xpath_str(tag: str, class_: str = None, **kwargs) -> str:
             for item in val:
                 val_xp = f'"{item}", '
 
-            val_xp = val_xp[:-2] if val else ''
+            val_xp = val_xp[:SKIP_COMMA] if val else ''
             tag_xp += f'contains({attr_xp}, {val_xp})'
 
         elif isinstance(val, str):
