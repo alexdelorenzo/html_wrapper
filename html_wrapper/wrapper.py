@@ -25,16 +25,16 @@ class BeautifulSoupMethods(ABC):
     def __init__(self, html):
         pass
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         pass
 
-    def __str__(self):
+    def __str__(self) -> str:
         pass
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> str:
         pass
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str) -> Any:
         pass
 
     @property
@@ -81,14 +81,14 @@ class HtmlWrapper(BeautifulSoupMethods):
 
             raise TypeError(msg)
 
-    def __repr__(self):
-        return f'HtmlWrapper: {repr(self.html)}'
+    def __repr__(self) -> str:
+        return f'{self.__name__}: {repr(self.html)}'
 
     def __str__(self) -> str:
         string = tostring(self.html, encoding=STR_ENCODING)
         return string.strip()
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> str:
         items = self.html.attrib[item]
 
         if item == 'class':
@@ -96,7 +96,7 @@ class HtmlWrapper(BeautifulSoupMethods):
 
         return items
 
-    def __getattr__(self, item):
+    def __getattr__(self, item) -> Any:
         val = self.find(item)
 
         if val is None:
