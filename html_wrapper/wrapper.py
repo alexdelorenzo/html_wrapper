@@ -53,7 +53,7 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: str = None,
+        class_: Optional[str] = None,
         **kwargs
     ) -> Optional['HtmlWrapper']:
         pass
@@ -63,8 +63,8 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: str = None,
-        gen=False,
+        class_: Optional[str] = None,
+        gen: bool = False,
         **kwargs
     ) -> 'Wrappers':
         pass
@@ -143,7 +143,7 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: str = None,
+        class_: Optional[str] = None,
         **kwargs
     ) -> Optional['HtmlWrapper']:
         return find(self.html, tag, attrs, class_=class_, **kwargs)
@@ -153,8 +153,8 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: str = None,
-        gen=False,
+        class_: Optional[str] = None,
+        gen: bool = False,
         **kwargs
     ) -> 'Wrappers':
         return find_all(self.html, tag, attrs, class_=class_, gen=gen, **kwargs)
@@ -167,7 +167,7 @@ def find(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: str = None,
+    class_: Optional[str] = None,
     **kwargs
 ) -> Optional[HtmlWrapper]:
     if isinstance(attrs, str):
@@ -186,7 +186,7 @@ def find_all(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: str = None,
+    class_: Optional[str] = None,
     gen: bool = False,
     **kwargs
 ) -> Wrappers:
