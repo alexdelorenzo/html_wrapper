@@ -48,10 +48,25 @@ class BeautifulSoupMethods(ABC):
     def name(self) -> str:
         pass
 
-    def find(self, tag: str, attrs: Attrs = NO_ATTRS, *, class_: str = None, **kwargs) -> Optional['HtmlWrapper']:
+    def find(
+        self,
+        tag: str,
+        attrs: Attrs = NO_ATTRS,
+        *,
+        class_: str = None,
+        **kwargs
+    ) -> Optional['HtmlWrapper']:
         pass
 
-    def find_all(self, tag: str, attrs: Attrs = NO_ATTRS, *, class_: str = None, gen=False, **kwargs) -> 'Wrappers':
+    def find_all(
+        self,
+        tag: str,
+        attrs: Attrs = NO_ATTRS,
+        *,
+        class_: str = None,
+        gen=False,
+        **kwargs
+    ) -> 'Wrappers':
         pass
 
 
