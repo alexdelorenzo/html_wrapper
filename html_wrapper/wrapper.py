@@ -14,6 +14,7 @@ NO_ATTRS: Dict[str, str] = {}
 NO_TEXT = ''
 SKIP_COMMA: int = -len(', ')
 
+
 Attrs = Union[str, Dict]
 CssClassType = str
 
