@@ -15,6 +15,7 @@ NO_TEXT = ''
 SKIP_COMMA: int = -len(', ')
 
 Attrs = Union[str, Dict]
+CssClassType = str
 
 
 class BeautifulSoupMethods(ABC):
@@ -53,7 +54,7 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[str] = None,
+        class_: Optional[CssClassType] = None,
         **kwargs
     ) -> Optional['HtmlWrapper']:
         pass
@@ -63,7 +64,7 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[str] = None,
+        class_: Optional[CssClassType] = None,
         gen: bool = False,
         **kwargs
     ) -> 'Wrappers':
@@ -143,7 +144,7 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[str] = None,
+        class_: Optional[CssClassType] = None,
         **kwargs
     ) -> Optional['HtmlWrapper']:
         return find(self.html, tag, attrs, class_=class_, **kwargs)
@@ -153,7 +154,7 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[str] = None,
+        class_: Optional[CssClassType] = None,
         gen: bool = False,
         **kwargs
     ) -> 'Wrappers':
@@ -167,7 +168,7 @@ def find(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: Optional[str] = None,
+    class_: Optional[CssClassType] = None,
     **kwargs
 ) -> Optional[HtmlWrapper]:
     if isinstance(attrs, str):
@@ -186,7 +187,7 @@ def find_all(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: Optional[str] = None,
+    class_: Optional[CssClassType] = None,
     gen: bool = False,
     **kwargs
 ) -> Wrappers:
@@ -208,7 +209,7 @@ def find_all(
     return wrapper_map if gen else tuple(wrapper_map)
 
 
-def get_xpath_str(tag: str, class_: str = None, **kwargs) -> str:
+def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
     tag_xp = f'.//{tag}'
 
     if class_:
@@ -244,7 +245,7 @@ def get_xpath_str(tag: str, class_: str = None, **kwargs) -> str:
 
 
 @lru_cache(maxsize=None)
-def get_xpath(tag: str, class_: str = None, **kwargs) -> XPath:
+def get_xpath(tag: str, class_: CssClassType = None, **kwargs) -> XPath:
     xpath_str = get_xpath_str(tag, class_, **kwargs)
 
     return XPath(xpath_str)
