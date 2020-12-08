@@ -212,8 +212,7 @@ def find_all(
 
 
 def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
-    tags: List[str] = []
-    tags.append(f'.//{tag}')
+    tags: List[str] = [f'.//{tag}']
 
     if class_:
         kwargs['class'] = class_
@@ -233,7 +232,7 @@ def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
             for item in val:
                 val_xp = f'"{item}", '
 
-            val_xp = val_xp[:SKIP_COMMA] if val else ''
+            val_xp = val_xp[:SKIP_COMMA] if val else NO_TEXT
             tags.append(f'contains({attr_xp}, {val_xp})')
 
         elif isinstance(val, str):
