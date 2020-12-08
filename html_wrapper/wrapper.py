@@ -1,5 +1,5 @@
 from typing import Union, Dict, AnyStr, Any, Optional, \
-    Iterable, Tuple
+    Iterable, Tuple, List
 from functools import lru_cache
 from abc import ABC
 
@@ -7,15 +7,16 @@ from lxml.html import HtmlElement, fromstring, tostring
 from lxml.etree import XPath
 
 
-BS4_TYPES = "Tag", "BeautifulSoup"
-STR_ENCODING = 'unicode'
+BS4_TYPES: Tuple[str] = "Tag", "BeautifulSoup"
+STR_ENCODING: str = 'unicode'
 
 NO_ATTRS: Dict[str, str] = {}
-NO_TEXT = ''
+NO_TEXT: str = ''
 SKIP_COMMA: int = -len(', ')
+COLLECTIONS: Tuple[type] = set, list, tuple
 
 
-Attrs = Union[str, Dict]
+Attrs = Union[str, Dict[str, str]]
 CssClassType = str
 
 
@@ -211,38 +212,39 @@ def find_all(
 
 
 def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
-    tag_xp = f'.//{tag}'
+    tags: List[str] = []
+    tags.append(f'.//{tag}')
 
     if class_:
         kwargs['class'] = class_
 
     for attr, val in kwargs.items():
-        tag_xp += '['
+        tags.append('[')
         attr_xp = f'@{attr}'
 
         if isinstance(val, bool):
             if val:
-                tag_xp += attr_xp
+                tags.append(attr_xp)
 
             else:
-                tag_xp += f'not({attr_xp})'
+                tags.append(f'not({attr_xp})')
 
-        elif isinstance(val, (set, list, tuple)):
+        elif isinstance(val, COLLECTIONS):
             for item in val:
                 val_xp = f'"{item}", '
 
             val_xp = val_xp[:SKIP_COMMA] if val else ''
-            tag_xp += f'contains({attr_xp}, {val_xp})'
+            tags.append(f'contains({attr_xp}, {val_xp})')
 
         elif isinstance(val, str):
-            tag_xp += f'contains({attr_xp}, "{val}")'
+            tags.append(f'contains({attr_xp}, "{val}")')
 
         else:
-            tag_xp += "{attr_xp}='{val}'"
+            tags.append("{attr_xp}='{val}'")
 
-        tag_xp += ']'
+        tags.append(']')
 
-    return tag_xp
+    return ''.join(tags)
 
 
 @lru_cache(maxsize=None)
