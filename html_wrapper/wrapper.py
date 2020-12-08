@@ -7,12 +7,12 @@ from lxml.html import HtmlElement, fromstring, tostring
 from lxml.etree import XPath
 
 
-BS4_TYPES: Tuple[str] = "Tag", "BeautifulSoup"
-STR_ENCODING: str = 'unicode'
-
-NO_ATTRS: Dict[str, str] = {}
 NO_TEXT: str = ''
+NO_ATTRS: Dict[str, str] = {}
 SKIP_COMMA: int = -len(', ')
+
+STR_ENCODING: str = 'unicode'
+BS4_TYPES: Tuple[str] = "Tag", "BeautifulSoup"
 COLLECTIONS: Tuple[type] = set, list, tuple
 
 
