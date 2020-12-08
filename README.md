@@ -10,7 +10,7 @@
 ## Example
 It's faster to instantiate and parse HTML. Suits my needs.
 
-```
+```python3
 In [1]: from html_wrapper import HtmlWrapper
 
 In [2]: from bs4 import BeautifulSoup
