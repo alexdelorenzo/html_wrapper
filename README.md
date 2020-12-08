@@ -17,7 +17,7 @@ In [2]: from bs4 import BeautifulSoup
 
 In [3]: from requests import get
 
-In [4]: html = get("https://en.wikipedia.org/wiki/HTML").content
+In [4]: html: bytes = get("https://en.wikipedia.org/wiki/HTML").content
 
 In [5]: %timeit HtmlWrapper(html).text
 23.4 ms ± 563 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
