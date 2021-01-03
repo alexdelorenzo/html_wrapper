@@ -239,7 +239,7 @@ def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
             tags.append(f'contains({attr_xp}, "{val}")')
 
         else:
-            tags.append("{attr_xp}='{val}'")
+            tags.append(f"{attr_xp}='{val}'")
 
         tags.append(']')
 
