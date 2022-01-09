@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union, Dict, AnyStr, Any, Optional, \
     Iterable, Tuple, List
 from functools import lru_cache
@@ -8,16 +10,19 @@ from lxml.etree import XPath
 
 
 NO_TEXT: str = ''
-NO_ATTRS: Dict[str, str] = {}
 SKIP_COMMA: int = -len(', ')
 
 STR_ENCODING: str = 'unicode'
 BS4_TYPES: Tuple[str] = "Tag", "BeautifulSoup"
 COLLECTIONS: Tuple[type] = set, list, tuple
 
+AttrMap = Dict[str, str]
+Attrs = Union[str, AttrMap]
+Attr = Optional[Union[HtmlElement, str, Any]]
+CssClass = str
 
-Attrs = Union[str, Dict[str, str]]
-CssClassType = str
+
+NO_ATTRS: Dict[str, str] = {}
 
 
 class BeautifulSoupMethods(ABC):
@@ -37,7 +42,7 @@ class BeautifulSoupMethods(ABC):
     def __getitem__(self, item: str) -> str:
         pass
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item: str) -> Attr:
         pass
 
     @property
@@ -56,9 +61,9 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[CssClassType] = None,
-        **kwargs
-    ) -> Optional['HtmlWrapper']:
+        class_: Optional[CssClass] = None,
+        **kwargs: AttrMap,
+    ) -> Optional[HtmlWrapper]:
         pass
 
     def find_all(
@@ -66,9 +71,9 @@ class BeautifulSoupMethods(ABC):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[CssClassType] = None,
+        class_: Optional[CssClass] = None,
         gen: bool = False,
-        **kwargs
+        **kwargs: AttrMap,
     ) -> 'Wrappers':
         pass
 
@@ -77,8 +82,9 @@ class HtmlWrapper(BeautifulSoupMethods):
     """
     An lxml adapter over a subset of the BeautifulSoup API
     """
-
     __slots__ = ['html']
+    
+    html: HtmlElement
 
     def __init__(self, html):
         if isinstance(html, (str, bytes)):
@@ -94,7 +100,7 @@ class HtmlWrapper(BeautifulSoupMethods):
             self.html = fromstring(str(html))
 
         else:
-            name = str(type(html))
+            name = type(html).__name__
             msg = f"Object of type {name} not compatible with HtmlWrapper"
 
             raise TypeError(msg)
@@ -106,7 +112,7 @@ class HtmlWrapper(BeautifulSoupMethods):
         string = tostring(self.html, encoding=STR_ENCODING)
         return string.strip()
 
-    def __getitem__(self, item) -> str:
+    def __getitem__(self, item: str) -> str:
         items = self.html.attrib[item]
 
         if item == 'class':
@@ -114,7 +120,7 @@ class HtmlWrapper(BeautifulSoupMethods):
 
         return items
 
-    def __getattr__(self, item) -> Any:
+    def __getattr__(self, item: str) -> Attr:
         val = self.find(item)
 
         if val is None:
@@ -135,7 +141,7 @@ class HtmlWrapper(BeautifulSoupMethods):
 
     @property
     @lru_cache
-    def string(self):
+    def string(self) -> str:
         return self.html.text.strip()
 
     def name(self) -> str:
@@ -146,9 +152,9 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[CssClassType] = None,
-        **kwargs
-    ) -> Optional['HtmlWrapper']:
+        class_: Optional[CssClass] = None,
+        **kwargs: AttrMap,
+    ) -> Optional[HtmlWrapper]:
         return find(self.html, tag, attrs, class_=class_, **kwargs)
 
     def find_all(
@@ -156,9 +162,9 @@ class HtmlWrapper(BeautifulSoupMethods):
         tag: str,
         attrs: Attrs = NO_ATTRS,
         *,
-        class_: Optional[CssClassType] = None,
+        class_: Optional[CssClass] = None,
         gen: bool = False,
-        **kwargs
+        **kwargs: AttrMap,
     ) -> 'Wrappers':
         return find_all(self.html, tag, attrs, class_=class_, gen=gen, **kwargs)
 
@@ -170,8 +176,8 @@ def find(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: Optional[CssClassType] = None,
-    **kwargs
+    class_: Optional[CssClass] = None,
+    **kwargs: AttrMap,
 ) -> Optional[HtmlWrapper]:
     if isinstance(attrs, str):
         class_ = attrs
@@ -189,9 +195,9 @@ def find_all(
     html: HtmlElement,
     tag: str,
     attrs: Attrs = NO_ATTRS,
-    class_: Optional[CssClassType] = None,
+    class_: Optional[CssClass] = None,
     gen: bool = False,
-    **kwargs
+    **kwargs: AttrMap,
 ) -> Wrappers:
     if isinstance(attrs, str):
         class_ = attrs
@@ -211,7 +217,7 @@ def find_all(
     return wrapper_map if gen else tuple(wrapper_map)
 
 
-def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
+def get_xpath_str(tag: str, class_: Optional[CssClass] = None, **kwargs) -> str:
     tags: List[str] = [f'.//{tag}']
 
     if class_:
@@ -247,7 +253,7 @@ def get_xpath_str(tag: str, class_: CssClassType = None, **kwargs) -> str:
 
 
 @lru_cache(maxsize=None)
-def get_xpath(tag: str, class_: CssClassType = None, **kwargs) -> XPath:
+def get_xpath(tag: str, class_: CssClass = None, **kwargs) -> XPath:
     xpath_str = get_xpath_str(tag, class_, **kwargs)
 
     return XPath(xpath_str)
